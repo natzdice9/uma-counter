@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>切れ者カウンター</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+      background: #f5f4f0;
+      color: #1a1a1a;
+      min-height: 100vh;
+      padding: 1.5rem 1rem 3rem;
+    }
+
+    h1 {
+      font-size: 18px;
+      font-weight: 500;
+      color: #1a1a1a;
+      letter-spacing: 0.05em;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+      font-size: 11px;
+      color: #999;
+      font-weight: 500;
+      margin: 0 0 8px;
+      letter-spacing: 0.05em;
+    }
+
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .counter-card {
+      background: #fff;
+      border: 0.5px solid #e0ddd6;
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .counter-label {
+      font-size: 12px;
+      color: #888;
+      line-height: 1.4;
+    }
+
+    .counter-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .counter-val {
+      font-size: 22px;
+      font-weight: 500;
+      color: #1a1a1a;
+      min-width: 32px;
+      text-align: center;
+    }
+
+    .btn-group { display: flex; gap: 6px; }
+
+    .btn {
+      background: transparent;
+      border: 0.5px solid #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: #1a1a1a;
+      padding: 4px 10px;
+      transition: background 0.1s;
+      font-family: inherit;
+    }
+    .btn:hover { background: #f5f4f0; }
+    .btn:active { transform: scale(0.97); }
+    .btn-plus { color: #0f6e56; border-color: #9fe1cb; }
+    .btn-minus { color: #999; font-size: 16px; }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .stat-card {
+      background: #eceae4;
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+    .stat-card.full { grid-column: 1 / -1; }
+
+    .stat-label {
+      font-size: 11px;
+      color: #777;
+      margin-bottom: 4px;
+      line-height: 1.4;
+    }
+
+    .stat-val {
+      font-size: 20px;
+      font-weight: 500;
+      color: #1a1a1a;
+    }
+
+    .divider {
+      border: none;
+      border-top: 0.5px solid #e0ddd6;
+      margin: 14px 0;
+    }
+
+    .reset-row { display: flex; justify-content: flex-end; }
+
+    .btn-reset {
+      background: transparent;
+      border: 0.5px solid #e0ddd6;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      color: #999;
+      padding: 5px 14px;
+      font-family: inherit;
+    }
+    .btn-reset:hover { background: #eceae4; }
+
+    .tag {
+      display: inline-block;
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 99px;
+      margin-bottom: 4px;
+    }
+    .tag-unique { background: #eeedfe; color: #3c3489; }
+    .tag-common { background: #e1f5ee; color: #0f6e56; }
+  </style>
+</head>
+<body>
+
+  <h1>切れ者カウンター</h1>
+
+  <p class="section-title">育成カウンター</p>
+  <div class="grid2">
+    <div class="counter-card">
+      <div class="counter-label">① 育成開始</div>
+      <div class="counter-row">
+        <span class="counter-val" id="v1">0</span>
+        <div class="btn-group">
+          <button class="btn btn-minus" onclick="dec('v1')">−</button>
+          <button class="btn btn-plus" onclick="inc('v1')">＋</button>
+        </div>
+      </div>
+    </div>
+    <div class="counter-card">
+      <div class="counter-label">② 育成諦め</div>
+      <div class="counter-row">
+        <span class="counter-val" id="v2">0</span>
+        <div class="btn-group">
+          <button class="btn btn-minus" onclick="dec('v2')">−</button>
+          <button class="btn btn-plus" onclick="inc('v2')">＋</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <p class="section-title">切れ者イベント（固有）</p>
+  <div class="grid2">
+    <div class="counter-card">
+      <span class="tag tag-unique">固有</span>
+      <div class="counter-label">③ 発生</div>
+      <div class="counter-row">
+        <span class="counter-val" id="v3">0</span>
+        <div class="btn-group">
+          <button class="btn btn-minus" onclick="dec('v3')">−</button>
+          <button class="btn btn-plus" onclick="inc('v3')">＋</button>
+        </div>
+      </div>
+    </div>
+    <div class="counter-card">
+      <span class="tag tag-unique">固有</span>
+      <div class="counter-label">④ 成功</div>
+      <div class="counter-row">
+        <span class="counter-val" id="v4">0</span>
+        <div class="btn-group">
+          <button class="btn btn-minus" onclick="dec('v4')">−</button>
+          <button class="btn btn-plus" onclick="inc('v4')">＋</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <p class="section-title">切れ者イベント（共通）</p>
+  <div class="grid2">
+    <div class="counter-card">
+      <span class="tag tag-common">共通</span>
+      <div class="counter-label">⑤ 発生</div>
+      <div class="counter-row">
+        <span class="counter-val" id="v5">0</span>
+        <div class="btn-group">
+          <button class="btn btn-minus" onclick="dec('v5')">−</button>
+          <button class="btn btn-plus" onclick="inc('v5')">＋</button>
+        </div>
+      </div>
+    </div>
+    <div class="counter-card">
+      <span class="tag tag-common">共通</span>
+      <div class="counter-label">⑥ 成功</div>
+      <div class="counter-row">
+        <span class="counter-val" id="v6">0</span>
+        <div class="btn-group">
+          <button class="btn btn-minus" onclick="dec('v6')">−</button>
+          <button class="btn btn-plus" onclick="inc('v6')">＋</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <p class="section-title">自動計算</p>
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-label">固有イベント 発生率<br><span style="font-size:10px;color:#aaa">③ ÷ ①</span></div>
+      <div class="stat-val" id="s1">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">固有イベント 成功率<br><span style="font-size:10px;color:#aaa">④ ÷ ③</span></div>
+      <div class="stat-val" id="s2">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">共通イベント 発生率<br><span style="font-size:10px;color:#aaa">⑤ ÷ ①</span></div>
+      <div class="stat-val" id="s3">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">共通イベント 成功率<br><span style="font-size:10px;color:#aaa">⑥ ÷ ⑤</span></div>
+      <div class="stat-val" id="s4">—</div>
+    </div>
+    <div class="stat-card full">
+      <div class="stat-label">切れ者イベント 合計成功率<br><span style="font-size:10px;color:#aaa">（④ ＋ ⑥）÷ ①</span></div>
+      <div class="stat-val" id="s5">—</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <div class="reset-row">
+    <button class="btn-reset" onclick="resetAll()">すべてリセット</button>
+  </div>
+
+  <script>
+    const vals = {v1:0,v2:0,v3:0,v4:0,v5:0,v6:0};
+
+    function render() {
+      Object.keys(vals).forEach(k => {
+        document.getElementById(k).textContent = vals[k];
+      });
+      const pct = (n,d) => d===0 ? '—' : (n/d*100).toFixed(1)+'%';
+      document.getElementById('s1').textContent = pct(vals.v3, vals.v1);
+      document.getElementById('s2').textContent = pct(vals.v4, vals.v3);
+      document.getElementById('s3').textContent = pct(vals.v5, vals.v1);
+      document.getElementById('s4').textContent = pct(vals.v6, vals.v5);
+      document.getElementById('s5').textContent = pct(vals.v4 + vals.v6, vals.v1);
+    }
+
+    function inc(k) { vals[k]++; render(); }
+    function dec(k) { if(vals[k]>0) vals[k]--; render(); }
+    function resetAll() {
+      if(confirm('カウントをすべてリセットしますか？')) {
+        Object.keys(vals).forEach(k => vals[k]=0);
+        render();
+      }
+    }
+
+    render();
+  </script>
+</body>
+</html>
