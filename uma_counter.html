@@ -259,7 +259,30 @@
   </div>
 
   <script>
+    const STORAGE_KEY = 'kiremon_counter';
     const vals = {v1:0,v2:0,v3:0,v4:0,v5:0,v6:0};
+
+    function save() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(vals));
+      } catch(e) {
+        console.error('save error:', e);
+      }
+    }
+
+    function load() {
+      try {
+        const data = localStorage.getItem(STORAGE_KEY);
+        if (data) {
+          const parsed = JSON.parse(data);
+          Object.keys(vals).forEach(k => {
+            if (parsed[k] !== undefined) vals[k] = parsed[k];
+          });
+        }
+      } catch(e) {
+        console.error('load error:', e);
+      }
+    }
 
     function render() {
       Object.keys(vals).forEach(k => {
@@ -273,15 +296,17 @@
       document.getElementById('s5').textContent = pct(vals.v4 + vals.v6, vals.v1);
     }
 
-    function inc(k) { vals[k]++; render(); }
-    function dec(k) { if(vals[k]>0) vals[k]--; render(); }
+    function inc(k) { vals[k]++; save(); render(); }
+    function dec(k) { if(vals[k]>0) vals[k]--; save(); render(); }
     function resetAll() {
       if(confirm('カウントをすべてリセットしますか？')) {
         Object.keys(vals).forEach(k => vals[k]=0);
+        save();
         render();
       }
     }
 
+    load();
     render();
   </script>
 </body>
