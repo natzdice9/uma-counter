@@ -45,8 +45,15 @@
       padding: 12px 14px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
+      position: relative;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      transition: background 0.1s;
     }
+    .counter-card:hover { background: #f9f8f5; }
+    .counter-card:active { background: #f0ede8; transform: scale(0.98); }
 
     .counter-label {
       font-size: 12px;
@@ -54,39 +61,29 @@
       line-height: 1.4;
     }
 
-    .counter-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
     .counter-val {
-      font-size: 22px;
+      font-size: 28px;
       font-weight: 500;
       color: #1a1a1a;
-      min-width: 32px;
-      text-align: center;
     }
 
-    .btn-group { display: flex; gap: 6px; }
-
-    .btn {
+    .btn-minus {
+      position: absolute;
+      top: 8px;
+      right: 8px;
       background: transparent;
-      border: 0.5px solid #ccc;
-      border-radius: 8px;
+      border: none;
       cursor: pointer;
-      font-size: 14px;
-      font-weight: 500;
-      color: #1a1a1a;
-      padding: 4px 10px;
-      transition: background 0.1s;
+      font-size: 16px;
+      color: #ccc;
+      padding: 4px 6px;
+      line-height: 1;
       font-family: inherit;
+      border-radius: 6px;
+      transition: color 0.1s, background 0.1s;
     }
-    .btn:hover { background: #f5f4f0; }
-    .btn:active { transform: scale(0.97); }
-    .btn-plus { color: #0f6e56; border-color: #9fe1cb; }
-    .btn-minus { color: #999; font-size: 16px; }
+    .btn-minus:hover { color: #999; background: #f0ede8; }
+    .btn-minus:active { color: #666; }
 
     .stat-grid {
       display: grid;
@@ -140,7 +137,7 @@
       font-size: 10px;
       padding: 2px 7px;
       border-radius: 99px;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
     .tag-unique { background: #eeedfe; color: #3c3489; }
     .tag-common { background: #e1f5ee; color: #0f6e56; }
@@ -152,79 +149,49 @@
 
   <p class="section-title">育成カウンター</p>
   <div class="grid2">
-    <div class="counter-card">
+    <div class="counter-card" onclick="inc('v1')">
+      <button class="btn-minus" onclick="event.stopPropagation(); dec('v1')">−</button>
       <div class="counter-label">① 育成開始</div>
-      <div class="counter-row">
-        <span class="counter-val" id="v1">0</span>
-        <div class="btn-group">
-          <button class="btn btn-minus" onclick="dec('v1')">−</button>
-          <button class="btn btn-plus" onclick="inc('v1')">＋</button>
-        </div>
-      </div>
+      <div class="counter-val" id="v1">0</div>
     </div>
-    <div class="counter-card">
+    <div class="counter-card" onclick="inc('v2')">
+      <button class="btn-minus" onclick="event.stopPropagation(); dec('v2')">−</button>
       <div class="counter-label">② 育成諦め</div>
-      <div class="counter-row">
-        <span class="counter-val" id="v2">0</span>
-        <div class="btn-group">
-          <button class="btn btn-minus" onclick="dec('v2')">−</button>
-          <button class="btn btn-plus" onclick="inc('v2')">＋</button>
-        </div>
-      </div>
+      <div class="counter-val" id="v2">0</div>
     </div>
   </div>
 
   <hr class="divider">
   <p class="section-title">切れ者イベント（固有）</p>
   <div class="grid2">
-    <div class="counter-card">
+    <div class="counter-card" onclick="inc('v3')">
+      <button class="btn-minus" onclick="event.stopPropagation(); dec('v3')">−</button>
       <span class="tag tag-unique">固有</span>
       <div class="counter-label">③ 発生</div>
-      <div class="counter-row">
-        <span class="counter-val" id="v3">0</span>
-        <div class="btn-group">
-          <button class="btn btn-minus" onclick="dec('v3')">−</button>
-          <button class="btn btn-plus" onclick="inc('v3')">＋</button>
-        </div>
-      </div>
+      <div class="counter-val" id="v3">0</div>
     </div>
-    <div class="counter-card">
+    <div class="counter-card" onclick="inc('v4')">
+      <button class="btn-minus" onclick="event.stopPropagation(); dec('v4')">−</button>
       <span class="tag tag-unique">固有</span>
       <div class="counter-label">④ 成功</div>
-      <div class="counter-row">
-        <span class="counter-val" id="v4">0</span>
-        <div class="btn-group">
-          <button class="btn btn-minus" onclick="dec('v4')">−</button>
-          <button class="btn btn-plus" onclick="inc('v4')">＋</button>
-        </div>
-      </div>
+      <div class="counter-val" id="v4">0</div>
     </div>
   </div>
 
   <hr class="divider">
   <p class="section-title">切れ者イベント（共通）</p>
   <div class="grid2">
-    <div class="counter-card">
+    <div class="counter-card" onclick="inc('v5')">
+      <button class="btn-minus" onclick="event.stopPropagation(); dec('v5')">−</button>
       <span class="tag tag-common">共通</span>
       <div class="counter-label">⑤ 発生</div>
-      <div class="counter-row">
-        <span class="counter-val" id="v5">0</span>
-        <div class="btn-group">
-          <button class="btn btn-minus" onclick="dec('v5')">−</button>
-          <button class="btn btn-plus" onclick="inc('v5')">＋</button>
-        </div>
-      </div>
+      <div class="counter-val" id="v5">0</div>
     </div>
-    <div class="counter-card">
+    <div class="counter-card" onclick="inc('v6')">
+      <button class="btn-minus" onclick="event.stopPropagation(); dec('v6')">−</button>
       <span class="tag tag-common">共通</span>
       <div class="counter-label">⑥ 成功</div>
-      <div class="counter-row">
-        <span class="counter-val" id="v6">0</span>
-        <div class="btn-group">
-          <button class="btn btn-minus" onclick="dec('v6')">−</button>
-          <button class="btn btn-plus" onclick="inc('v6')">＋</button>
-        </div>
-      </div>
+      <div class="counter-val" id="v6">0</div>
     </div>
   </div>
 
